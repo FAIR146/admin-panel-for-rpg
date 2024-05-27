@@ -1,4 +1,4 @@
-package com.game.controller;
+package com.example.demo.filter;
 
 public enum PlayerOrder {
     ID("id"), // default
