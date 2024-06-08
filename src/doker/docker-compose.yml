@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: admin-panel
+      POSTGRES_PASSWORD: admin-panel
+      POSTGRES_DB: admin-panel
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
