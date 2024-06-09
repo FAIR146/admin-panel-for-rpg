@@ -1,31 +1,29 @@
-package controller.Put;
+package controller.response;
 
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class AbstractPutRequest {
-    @NotBlank
+public class GetPlayerResponse {
+    private long id;
     private String name;
-    @NotBlank
     private String title;
-    @NotNull
     private Race race;
-    @NotNull
     private Profession profession;
-    @NotBlank
     private LocalDate birthday;
-    @NotBlank
     private boolean banned;
-    @NotBlank
     private int experience;
-    @NotBlank
     private int level;
-    @NotBlank
     private int untilNextLevel;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

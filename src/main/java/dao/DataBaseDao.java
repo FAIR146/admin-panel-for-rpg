@@ -1,17 +1,14 @@
-package Dao;
+package dao;
 
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
+import dto.PlayerDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import java.lang.annotation.Target;
-import java.util.HashMap;
-import java.util.Objects;
 
 @Repository
 public class DataBaseDao implements PlayerDao {
@@ -20,7 +17,6 @@ public class DataBaseDao implements PlayerDao {
 
     private final RowMapper<Player> playerRowMapper = (rs, rowNum) -> {
         Player player = new Player();
-        player.setId(rs.getLong("id"));
         player.setName(rs.getString("name"));
         player.setTitle(rs.getString("title"));
         player.setRace(Race.valueOf(rs.getString("race")));
@@ -28,8 +24,6 @@ public class DataBaseDao implements PlayerDao {
         player.setBirthday(rs.getDate("birthday").toLocalDate());
         player.setBanned(rs.getBoolean("banned"));
         player.setExperience(rs.getInt("experience"));
-        player.setLevel(rs.getInt("level"));
-        player.setUntilNextLevel(rs.getInt("untilnextlevel"));
         return player;
     };
 
@@ -41,20 +35,12 @@ public class DataBaseDao implements PlayerDao {
                 .usingColumns("name", "title", "race", "profession", "birthday", "banned", "experience", "level", "untilnextlevel")
                 .usingGeneratedKeyColumns("id");
     }
+
     @Override
-    public long addPlayer (Player player) {
-        HashMap<String, Object> hashMap = new HashMap<>(){{
-            put("name", player.getName());
-            put("title", player.getTitle());
-            put("race", player.getRace());
-            put("profession", player.getProfession());
-            put("birthday", player.getBirthday());
-            put("banned", player.isBanned());
-            put("experience", player.getExperience());
-            put("level", player.getLevel());
-            put("unitlnextlevel", player.getUntilNextLevel());
-        }};
-        return simpleJdbcInsertPlayer.executeAndReturnKey(hashMap).longValue();
+    public Player createPlayer(Player player) {
+        String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Player newPlayer = jdbcTemplate.queryForObject(sql, playerRowMapper);
+        return newPlayer;
     }
 
     @Override

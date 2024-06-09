@@ -1,26 +1,32 @@
 package controller;
 
-import Service.Manager;
+import dto.PlayerDto;
+import service.PlayerService;
 import com.example.demo.entity.Player;
-import controller.Put.PutPlayerRequest;
-import controller.Response.GetPlayerResponse;
-import controller.Response.PutPlayerResponse;
+import controller.put.CreatePlayerRequest;
+import controller.response.GetPlayerResponse;
+import controller.response.CreatePlayerResponse;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
-public class ManagerControllerImpl implements ManagerController{
-    private final Manager manager;
-    public ManagerControllerImpl (Manager manager) {
-        this.manager = manager;
-    }
+
+public class PlayerControllerImpl implements PlayerController {
+
+    private final PlayerService playerService;
+
 
     @Override
-    public PutPlayerResponse putPlayer(PutPlayerRequest putPlayerRequest) {
-        PutPlayerResponse putPlayerResponse = new PutPlayerResponse();
-        long id = manager.addPlayer(putPlayerRequest.getName(), putPlayerRequest.getTitle(), putPlayerRequest.getRace(), putPlayerRequest.getProfession(), putPlayerRequest.getBirthday(), putPlayerRequest.isBanned(), putPlayerRequest.getExperience(), putPlayerRequest.getLevel(), putPlayerRequest.getUntilNextLevel());
-        putPlayerResponse.setId(id);
-        return putPlayerResponse;
+    public CreatePlayerResponse createPlayer(CreatePlayerRequest createPlayerRequest) {
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setBanned(false);
+
+        PlayerDto createdPlayerDto = playerService.createPlayer(playerDto);
+
+        CreatePlayerResponse createPlayerResponse = new CreatePlayerResponse();
+
+        return createPlayerResponse;
     }
     @Override
     public void deletePlayerById (long id) {
@@ -33,6 +39,7 @@ public class ManagerControllerImpl implements ManagerController{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         GetPlayerResponse getPlayerResponse = new GetPlayerResponse();
+
         getPlayerResponse.setName(player.getName());
         getPlayerResponse.setTitle(player.getTitle());
         getPlayerResponse.setRace(player.getRace());
