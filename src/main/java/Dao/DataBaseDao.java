@@ -1,6 +1,8 @@
 package Dao;
 
 import com.example.demo.entity.Player;
+import com.example.demo.entity.Profession;
+import com.example.demo.entity.Race;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,8 +23,8 @@ public class DataBaseDao implements PlayerDao {
         player.setId(rs.getLong("id"));
         player.setName(rs.getString("name"));
         player.setTitle(rs.getString("title"));
-        player.setRace(rs.getString("race"));
-        player.setProfession(rs.getString("profession"));
+        player.setRace(Race.valueOf(rs.getString("race")));
+        player.setProfession(Profession.valueOf(rs.getString("profession")));
         player.setBirthday(rs.getDate("birthday").toLocalDate());
         player.setBanned(rs.getBoolean("banned"));
         player.setExperience(rs.getInt("experience"));
