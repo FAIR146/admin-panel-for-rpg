@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 public interface PlayerController {
     @PostMapping("/rest/players")
-    CreatePlayerResponse createPlayer(@Valid @RequestBody CreatePlayerRequest putPlayerRequest);
+    CreatePlayerResponse createPlayer (@Valid @RequestBody CreatePlayerRequest putPlayerRequest);
     @DeleteMapping("/rest/players/{id}")
     void deletePlayerById (@PathVariable long id);
     @GetMapping("/rest/players/{id}")

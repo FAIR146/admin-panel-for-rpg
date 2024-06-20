@@ -6,6 +6,7 @@ import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
 import dto.PlayerDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,13 +14,14 @@ import java.time.LocalDate;
 @Service
 @Slf4j
 public class PlayerServiceImpl implements PlayerService {
+
     private final PlayerDao playerDao;
     public PlayerServiceImpl(PlayerDao playerDao) {
         this.playerDao = playerDao;
     }
 
     @Override
-    public PlayerDto createPlayer (PlayerDto playerDto) {
+    public PlayerDto createPlayer(PlayerDto playerDto) {
         Player player = new Player();
         player.setName(playerDto.getName());
         player.setTitle(playerDto.getTitle());
@@ -29,10 +31,20 @@ public class PlayerServiceImpl implements PlayerService {
         player.setBanned(playerDto.isBanned());
         player.setExperience(playerDto.getExperience());
 
+        Player createdPlayer = playerDao.createPlayer(player);
 
-        Player player1 = playerDao.createPlayer(player);
+        PlayerDto createdPlayerDto = new PlayerDto();
+        createdPlayerDto.setName(createdPlayer.getName());
+        createdPlayerDto.setTitle(createdPlayer.getTitle());
+        createdPlayerDto.setRace(createdPlayer.getRace());
+        createdPlayerDto.setProfession(createdPlayer.getProfession());
+        createdPlayerDto.setBirthday(createdPlayer.getBirthday());
+        createdPlayerDto.setBanned(createdPlayer.isBanned());
+        createdPlayerDto.setExperience(createdPlayer.getExperience());
+        createdPlayerDto.setLevel(createdPlayer.getLevel());
+        createdPlayerDto.setUntilNextLevel(createdPlayer.getUntilNextLevel());
 
-        return null;
+        return createdPlayerDto;
     }
 
     @Override

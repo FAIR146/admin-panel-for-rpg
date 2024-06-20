@@ -13,7 +13,7 @@ public class CreatePlayerResponse {
     private String title;
     private Race race;
     private Profession profession;
-    private LocalDate birthday;
+    private Long birthday;
     private Boolean banned;
     private Integer experience;
     private Integer level;

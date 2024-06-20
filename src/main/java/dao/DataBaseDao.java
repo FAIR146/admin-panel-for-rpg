@@ -21,7 +21,7 @@ public class DataBaseDao implements PlayerDao {
         player.setTitle(rs.getString("title"));
         player.setRace(Race.valueOf(rs.getString("race")));
         player.setProfession(Profession.valueOf(rs.getString("profession")));
-        player.setBirthday(rs.getDate("birthday").toLocalDate());
+        player.setBirthday(rs.getLong("birthday"));
         player.setBanned(rs.getBoolean("banned"));
         player.setExperience(rs.getInt("experience"));
         return player;
@@ -39,8 +39,10 @@ public class DataBaseDao implements PlayerDao {
     @Override
     public Player createPlayer(Player player) {
         String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Player newPlayer = jdbcTemplate.queryForObject(sql, playerRowMapper);
-        return newPlayer;
+        jdbcTemplate.update(sql, player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(), player.getBirthday(), player.isBanned(), player.getExperience());
+
+        String selectSql = "SELECT * FROM player WHERE id = LAST_INSERT_ID()";
+        return jdbcTemplate.queryForObject(selectSql, playerRowMapper);
     }
 
     @Override
