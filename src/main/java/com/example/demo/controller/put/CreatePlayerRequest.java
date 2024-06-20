@@ -1,4 +1,4 @@
-package controller.put;
+package com.example.demo.controller.put;
 
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;

@@ -1,4 +1,4 @@
-package controller.response;
+package com.example.demo.dto;
 
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
@@ -7,15 +7,15 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class CreatePlayerResponse {
+public class PlayerDto {
     private Long id;
     private String name;
     private String title;
     private Race race;
     private Profession profession;
     private Long birthday;
-    private Boolean banned;
-    private Integer experience;
-    private Integer level;
-    private Integer untilNextLevel;
+    private boolean banned;
+    private int experience;
+    private int level;
+    private int untilNextLevel;
 }

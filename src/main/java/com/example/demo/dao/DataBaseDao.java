@@ -1,9 +1,9 @@
-package dao;
+package com.example.demo.dao;
 
+import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
-import dto.PlayerDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,7 +63,7 @@ public class DataBaseDao implements PlayerDao {
         }
     }
     @Override
-    public void updatePlayer (Player player) {
+    public void updatePlayer (PlayerDto playerDto) {
         String sql = "UPDATE player SET " +
                 "name = ?, " +
                 "title = ?, " +
@@ -75,6 +75,6 @@ public class DataBaseDao implements PlayerDao {
                 "level = ?, " +
                 "untilnextlevel = ?, " +
                 "WHERE id = ?";
-        jdbcTemplate.update(sql, player.getName(), player.getTitle(), player.getRace(), player.getProfession(), player.getBirthday(), player.isBanned(), player.getExperience(), player.getLevel(), player.getUntilNextLevel());
+        jdbcTemplate.update(sql, playerDto.getName(), playerDto.getTitle(), playerDto.getRace(), playerDto.getProfession(), playerDto.getBirthday(), playerDto.isBanned(), playerDto.getExperience(), playerDto.getLevel(), playerDto.getUntilNextLevel());
     }
 }
