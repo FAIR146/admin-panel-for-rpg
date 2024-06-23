@@ -39,7 +39,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerDto updatePlayerById (PlayerDto playerDto) {
+    public PlayerDto  updatePlayerById (PlayerDto playerDto) {
         Player player = Mapper.mapFromDtoToPlayer(playerDto);
         PlayerDto updatedPlayerDto = Mapper.mapToDto(player);
 

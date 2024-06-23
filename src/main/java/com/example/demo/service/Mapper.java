@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.controller.put.CreatePlayerRequest;
-import com.example.demo.controller.response.CreatePlayerResponse;
+import com.example.demo.controller.response.PlayerResponse;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
+
+import java.time.LocalDate;
 
 
 public class Mapper {
@@ -23,36 +25,36 @@ public class Mapper {
         return playerDto;
     }
 
-    public static CreatePlayerResponse mapFromDtoToCreateResponse(PlayerDto playerDto) {
-        CreatePlayerResponse createPlayerResponse = new CreatePlayerResponse();
+    public static PlayerResponse mapFromDtoToCreateResponse(PlayerDto playerDto) {
+        PlayerResponse playerResponse = new PlayerResponse();
 
-        createPlayerResponse.setName(playerDto.getName());
-        createPlayerResponse.setTitle(playerDto.getTitle());
-        createPlayerResponse.setRace(playerDto.getRace());
-        createPlayerResponse.setProfession(playerDto.getProfession());
-        createPlayerResponse.setBirthday(playerDto.getBirthday());
-        createPlayerResponse.setBanned(playerDto.isBanned());
-        createPlayerResponse.setExperience(playerDto.getExperience());
-        createPlayerResponse.setLevel(playerDto.getLevel());
-        createPlayerResponse.setUntilNextLevel(playerDto.getUntilNextLevel());
+        playerResponse.setName(playerDto.getName());
+        playerResponse.setTitle(playerDto.getTitle());
+        playerResponse.setRace(playerDto.getRace());
+        playerResponse.setProfession(playerDto.getProfession());
+        playerResponse.setBirthday(playerDto.getBirthday());
+        playerResponse.setBanned(playerDto.isBanned());
+        playerResponse.setExperience(playerDto.getExperience());
+        playerResponse.setLevel(playerDto.getLevel());
+        playerResponse.setUntilNextLevel(playerDto.getUntilNextLevel());
 
-        return createPlayerResponse;
+        return playerResponse;
     }
 
-    public static GetPlayerResponse mapFromDtoToGetResponse (PlayerDto playerDto) {
-        GetPlayerResponse getPlayerResponse = new GetPlayerResponse();
+    public static PlayerResponse mapFromDtoToGetResponse (PlayerDto playerDto) {
+        PlayerResponse PlayerResponse = new PlayerResponse();
 
-        getPlayerResponse.setName(playerDto.getName());
-        getPlayerResponse.setTitle(playerDto.getTitle());
-        getPlayerResponse.setRace(playerDto.getRace());
-        getPlayerResponse.setProfession(playerDto.getProfession());
-        getPlayerResponse.setBirthday(playerDto.getBirthday());
-        getPlayerResponse.setBanned(playerDto.isBanned());
-        getPlayerResponse.setExperience(playerDto.getExperience());
-        getPlayerResponse.setLevel(playerDto.getLevel());
-        getPlayerResponse.setUntilNextLevel(playerDto.getUntilNextLevel());
+        PlayerResponse.setName(playerDto.getName());
+        PlayerResponse.setTitle(playerDto.getTitle());
+        PlayerResponse.setRace(playerDto.getRace());
+        PlayerResponse.setProfession(playerDto.getProfession());
+        PlayerResponse.setBirthday(playerDto.getBirthday());
+        PlayerResponse.setBanned(playerDto.isBanned());
+        PlayerResponse.setExperience(playerDto.getExperience());
+        PlayerResponse.setLevel(playerDto.getLevel());
+        PlayerResponse.setUntilNextLevel(playerDto.getUntilNextLevel());
 
-        return getPlayerResponse;
+        return PlayerResponse;
     }
     public static PlayerDto mapFromRequestToDto (CreatePlayerRequest playerRequest) {
         PlayerDto playerDto = new PlayerDto();
@@ -61,7 +63,7 @@ public class Mapper {
         playerDto.setTitle(playerRequest.getTitle());
         playerDto.setRace(playerRequest.getRace());
         playerDto.setProfession(playerRequest.getProfession());
-        playerDto.setBirthday(playerRequest.getBirthday());
+        playerDto.setBirthday(LocalDate.ofEpochDay(playerRequest.getBirthday()));
         playerDto.setBanned(playerRequest.getBanned());
         playerDto.setExperience(playerRequest.getExperience());
 

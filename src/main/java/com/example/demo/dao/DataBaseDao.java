@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+
 @Repository
 public class DataBaseDao implements PlayerDao {
     private final JdbcTemplate jdbcTemplate;
@@ -17,11 +19,12 @@ public class DataBaseDao implements PlayerDao {
 
     private final RowMapper<Player> playerRowMapper = (rs, rowNum) -> {
         Player player = new Player();
+        player.setId(rs.getLong("id"));
         player.setName(rs.getString("name"));
         player.setTitle(rs.getString("title"));
         player.setRace(Race.valueOf(rs.getString("race")));
         player.setProfession(Profession.valueOf(rs.getString("profession")));
-        player.setBirthday(rs.getLong("birthday"));
+        player.setBirthday(rs.getDate("birthday").toLocalDate());
         player.setBanned(rs.getBoolean("banned"));
         player.setExperience(rs.getInt("experience"));
         return player;
@@ -38,13 +41,12 @@ public class DataBaseDao implements PlayerDao {
 
     @Override
     public Player createPlayer(Player player) {
-        String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(), player.getBirthday(), player.isBanned(), player.getExperience());
+        String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
+        Long playerId = jdbcTemplate.queryForObject(sql, new Object[]{player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(), java.sql.Date.valueOf(player.getBirthday()), player.isBanned(), player.getExperience()}, Long.class);
 
-        String selectSql = "SELECT * FROM player WHERE id = LAST_INSERT_ID()";
-        return jdbcTemplate.queryForObject(selectSql, playerRowMapper);
+        String selectSql = "SELECT * FROM player WHERE id = ?";
+        return jdbcTemplate.queryForObject(selectSql, new Object[]{playerId}, playerRowMapper);
     }
-
     @Override
     public void removePlayerById (long id) {
         String sql = "DELETE FROM player WHERE id = ?";

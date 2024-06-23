@@ -18,11 +18,11 @@ public class CreatePlayerRequest {
     private Race race;
     @NotNull
     private Profession profession;
-    @NotBlank
+    @NotNull
     private Long birthday;
-    @NotBlank
+    @NotNull
     private Boolean banned = false;
-    @NotBlank
+    @NotNull
     private Integer experience;
 
 }

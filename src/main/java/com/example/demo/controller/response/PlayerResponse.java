@@ -7,13 +7,13 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class CreatePlayerResponse {
+public class PlayerResponse {
     private Long id;
     private String name;
     private String title;
     private Race race;
     private Profession profession;
-    private Long birthday;
+    private LocalDate birthday;
     private Boolean banned;
     private Integer experience;
     private Integer level;

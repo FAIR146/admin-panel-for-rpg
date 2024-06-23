@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.put.CreatePlayerRequest;
-import com.example.demo.controller.response.CreatePlayerResponse;
+import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.response.PlayerResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,13 @@ import javax.validation.Valid;
 
 public interface PlayerController {
     @PostMapping("/rest/players")
-    CreatePlayerResponse createPlayer (@Valid @RequestBody CreatePlayerRequest createPlayerRequest);
+    PlayerResponse createPlayer (@Valid @RequestBody CreatePlayerRequest createPlayerRequest);
     @DeleteMapping("/rest/players/{id}")
     void deletePlayerById (@PathVariable long id);
     @GetMapping("/rest/players/{id}")
-    ResponseEntity<GetPlayerResponse> getPlayerById (@PathVariable long id);
+    ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id);
+    @PostMapping("/players/{id}")
+    PlayerResponse updatePlayerById (@Valid @RequestBody CreatePlayerRequest createPlayerRequest, @PathVariable long id);
+    @GetMapping("/rest/players/count")
+    int getPlayersCount (@Valid @RequestBody GetPlayerCountRequest getPlayerCountRequest);
 }

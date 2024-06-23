@@ -13,7 +13,7 @@ public class PlayerDto {
     private String title;
     private Race race;
     private Profession profession;
-    private Long birthday;
+    private LocalDate birthday;
     private boolean banned;
     private int experience;
     private int level;
