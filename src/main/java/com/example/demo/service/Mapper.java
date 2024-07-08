@@ -12,6 +12,7 @@ public class Mapper {
     public static PlayerDto mapToDto (Player player) {
         PlayerDto playerDto = new PlayerDto();
 
+        playerDto.setId(player.getId());
         playerDto.setName(player.getName());
         playerDto.setTitle(player.getTitle());
         playerDto.setRace(player.getRace());
@@ -28,6 +29,7 @@ public class Mapper {
     public static PlayerResponse mapFromDtoToCreateResponse(PlayerDto playerDto) {
         PlayerResponse playerResponse = new PlayerResponse();
 
+        playerResponse.setId(playerDto.getId());
         playerResponse.setName(playerDto.getName());
         playerResponse.setTitle(playerDto.getTitle());
         playerResponse.setRace(playerDto.getRace());
@@ -44,6 +46,7 @@ public class Mapper {
     public static PlayerResponse mapFromDtoToGetResponse (PlayerDto playerDto) {
         PlayerResponse PlayerResponse = new PlayerResponse();
 
+        PlayerResponse.setId(playerDto.getId());
         PlayerResponse.setName(playerDto.getName());
         PlayerResponse.setTitle(playerDto.getTitle());
         PlayerResponse.setRace(playerDto.getRace());
@@ -59,6 +62,7 @@ public class Mapper {
     public static PlayerDto mapFromRequestToDto (CreatePlayerRequest playerRequest) {
         PlayerDto playerDto = new PlayerDto();
 
+        playerDto.setId(playerRequest.getId());
         playerDto.setName(playerRequest.getName());
         playerDto.setTitle(playerRequest.getTitle());
         playerDto.setRace(playerRequest.getRace());
@@ -73,6 +77,7 @@ public class Mapper {
     public static Player mapFromDtoToPlayer (PlayerDto playerDto) {
         Player player = new Player();
 
+        player.setId(playerDto.getId());
         player.setName(playerDto.getName());
         player.setTitle(playerDto.getTitle());
         player.setRace(playerDto.getRace());

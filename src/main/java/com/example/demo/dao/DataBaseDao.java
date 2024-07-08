@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import com.example.demo.controller.put.GetPlayerCountRequest;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
@@ -11,6 +12,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class DataBaseDao implements PlayerDao {
@@ -27,6 +30,8 @@ public class DataBaseDao implements PlayerDao {
         player.setBirthday(rs.getDate("birthday").toLocalDate());
         player.setBanned(rs.getBoolean("banned"));
         player.setExperience(rs.getInt("experience"));
+        player.setLevel(rs.getInt("level"));
+        player.setUntilNextLevel(rs.getInt("untilnextlevel"));
         return player;
     };
 
@@ -41,8 +46,8 @@ public class DataBaseDao implements PlayerDao {
 
     @Override
     public Player createPlayer(Player player) {
-        String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
-        Long playerId = jdbcTemplate.queryForObject(sql, new Object[]{player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(), java.sql.Date.valueOf(player.getBirthday()), player.isBanned(), player.getExperience()}, Long.class);
+        String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience, level, untilnextlevel) VALUES (?, ?, ?, ?, ?, ?, ?,?,?) RETURNING id";
+        long playerId = jdbcTemplate.queryForObject(sql, new Object[]{player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(), java.sql.Date.valueOf(player.getBirthday()), player.isBanned(), player.getExperience(),player.getLevel(), player.getUntilNextLevel()}, Long.class);
 
         String selectSql = "SELECT * FROM player WHERE id = ?";
         return jdbcTemplate.queryForObject(selectSql, new Object[]{playerId}, playerRowMapper);
@@ -69,14 +74,30 @@ public class DataBaseDao implements PlayerDao {
         String sql = "UPDATE player SET " +
                 "name = ?, " +
                 "title = ?, " +
-                "race = ? " +
+                "race = ?, " +
                 "profession = ?, " +
                 "birthday = ?, " +
                 "banned = ?, " +
                 "experience = ?, " +
                 "level = ?, " +
-                "untilnextlevel = ?, " +
+                "untilnextlevel = ? " +
                 "WHERE id = ?";
-        jdbcTemplate.update(sql, playerDto.getName(), playerDto.getTitle(), playerDto.getRace(), playerDto.getProfession(), playerDto.getBirthday(), playerDto.isBanned(), playerDto.getExperience(), playerDto.getLevel(), playerDto.getUntilNextLevel());
+
+        jdbcTemplate.update(sql, playerDto.getName(), playerDto.getTitle(), playerDto.getRace().name(), playerDto.getProfession().name(), playerDto.getBirthday(), playerDto.isBanned(), playerDto.getExperience(), playerDto.getLevel(), playerDto.getUntilNextLevel(), playerDto.getId());
     }
+    @Override
+    public List<Player> getAllPlayers() {
+        String sql = "SELECT id, name, title, race, profession, birthday, banned, experience, level, untilnextlevel FROM player";
+        return jdbcTemplate.query(sql, playerRowMapper);
+    }
+    @Override
+    public int getPlayersCount() {
+        String sql = "SELECT COUNT(*) FROM player";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+    @Override
+    public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
+        return 1;
+    }
+
 }

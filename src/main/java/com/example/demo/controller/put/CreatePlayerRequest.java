@@ -10,6 +10,8 @@ import java.time.LocalDate;
 
 @Data
 public class CreatePlayerRequest {
+
+    private long id;
     @NotBlank
     private String name;
     @NotBlank

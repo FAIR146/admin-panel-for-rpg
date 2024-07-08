@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class GetPlayerCountRequest {
+    private long id;
     @NotBlank
     private String name;
     @NotBlank
@@ -15,7 +16,6 @@ public class GetPlayerCountRequest {
     private Race race;
     @NotNull
     private Profession profession;
-
     private Long after;
     private Long before;
     @NotNull
@@ -24,6 +24,14 @@ public class GetPlayerCountRequest {
     private Integer maxExperience;
     private Integer minLevel;
     private Integer maxLevel;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
