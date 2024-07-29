@@ -69,7 +69,7 @@ public class PlayerServiceImpl implements PlayerService {
         playerDto.setUntilNextLevel(untilNextLevel);
     }
     @Override
-    public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
+    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
         return playerDao.getFilteredPlayersCount(getPlayerCountRequest);
     }
 

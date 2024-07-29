@@ -15,7 +15,7 @@ public interface PlayerService {
     PlayerDto getPlayerById (long id);
     PlayerDto updatePlayerById (PlayerDto playerDto);
     List<Player> getAllPlayers();
-    int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
+    Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
     List<PlayerDto> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest);
 
 }

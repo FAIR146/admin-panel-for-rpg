@@ -30,8 +30,8 @@ public interface PlayerController {
 //    @GetMapping("/rest/players")
 //    List<PlayerDto> getAllPlayers();
     @GetMapping("/rest/players/count")
-    int getFilteredPlayersCount(@RequestBody GetPlayerCountRequest getPlayerCountRequest);
+    Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
     @GetMapping("/rest/players")
-    List<PlayerResponse> getFilteredPlayers(@RequestBody GetPlayersListRequest getPlayersListRequest);
+    List<PlayerResponse> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest);
 
 }

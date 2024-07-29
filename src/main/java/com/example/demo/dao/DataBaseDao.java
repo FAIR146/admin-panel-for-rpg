@@ -93,7 +93,7 @@ public class DataBaseDao implements PlayerDao {
         return jdbcTemplate.query(sql, playerRowMapper);
     }
     @Override
-    public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
+    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
         String sql = "SELECT COUNT(*) FROM player WHERE name like ? AND title = ? AND race = ? AND profession = ? AND " +
                 "? <= birthday AND birthday <= ? AND banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ?";
 
@@ -104,7 +104,18 @@ public class DataBaseDao implements PlayerDao {
     @Override
     public List<Player> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
         String sql = "SELECT FROM player WHERE name like ? AND title = ? AND race = ? AND profession = ? AND " +
-                      "banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ?";
+                "? <= birthday AND birthday <= ? AND banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ? AND ";
+
+        if (getPlayersListRequest.getTitle() != null) {
+            sql + "title = ? AND ";
+        }
+        if (getPlayersListRequest.getRace() != null) {
+            String sqlRace = "race = ? AND";
+        }
+        if (getPlayersListRequest.getProfession() != null) {
+            String sqlProfsesion
+        }
+
 
         return jdbcTemplate.query(sql, playerRowMapper,"%" + getPlayersListRequest.getName() + "%", getPlayersListRequest.getTitle(), getPlayersListRequest.getRace().name(),
                 getPlayersListRequest.getProfession().name(), getPlayersListRequest.getBanned(), getPlayersListRequest.getMinExperience(), getPlayersListRequest.getMaxExperience(), getPlayersListRequest.getMinLevel(),

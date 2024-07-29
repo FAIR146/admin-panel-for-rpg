@@ -64,7 +64,7 @@ public class PlayerControllerImpl implements PlayerController {
 //                .collect(Collectors.toList());
 //    }
     @Override
-    public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
+    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
         return playerService.getFilteredPlayersCount(getPlayerCountRequest);
     }
     @Override

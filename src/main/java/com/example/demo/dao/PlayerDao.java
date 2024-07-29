@@ -20,8 +20,7 @@ public interface PlayerDao {
 
     List<Player> getAllPlayers();
 
-    int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
-
+    Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
     List<Player> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest);
 
 
