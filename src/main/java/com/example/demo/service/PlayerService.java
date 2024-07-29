@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.put.GetPlayersListRequest;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
@@ -14,6 +15,7 @@ public interface PlayerService {
     PlayerDto getPlayerById (long id);
     PlayerDto updatePlayerById (PlayerDto playerDto);
     List<Player> getAllPlayers();
-    int getPlayersCount();
     int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
+    List<PlayerDto> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest);
+
 }

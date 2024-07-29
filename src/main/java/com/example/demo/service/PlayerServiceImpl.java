@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.put.GetPlayersListRequest;
 import com.example.demo.dao.PlayerDao;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
@@ -58,10 +59,6 @@ public class PlayerServiceImpl implements PlayerService {
     public List<Player> getAllPlayers() {
         return playerDao.getAllPlayers();
     }
-    @Override
-    public int getPlayersCount() {
-        return playerDao.getPlayersCount();
-    }
 
     private void calculateLevelAndExperience(PlayerDto playerDto) {
         int experience = playerDto.getExperience();
@@ -76,4 +73,11 @@ public class PlayerServiceImpl implements PlayerService {
         return playerDao.getFilteredPlayersCount(getPlayerCountRequest);
     }
 
+    @Override
+    public List<PlayerDto> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
+        List<Player> players = playerDao.getFilteredPlayers(getPlayersListRequest);
+        return players.stream()
+                .map(Mapper::mapToDto)
+                .collect(Collectors.toList());
+    }
 }

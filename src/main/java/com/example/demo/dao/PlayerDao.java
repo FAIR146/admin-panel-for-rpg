@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.put.GetPlayersListRequest;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
@@ -19,8 +20,10 @@ public interface PlayerDao {
 
     List<Player> getAllPlayers();
 
-    int getPlayersCount();
-
     int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
+
+    List<Player> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest);
+
+
 
 }

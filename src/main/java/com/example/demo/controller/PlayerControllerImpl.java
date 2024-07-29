@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.controller.put.CreatePlayerRequest;
 import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.put.GetPlayersListRequest;
 import com.example.demo.controller.response.PlayerResponse;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
@@ -50,25 +51,27 @@ public class PlayerControllerImpl implements PlayerController {
     }
 
     @Override
-    public int getPlayersCount() {
-        return playerService.getPlayersCount();
-    }
-
-    @Override
     public PlayerResponse updatePlayerById(CreatePlayerRequest createPlayerRequest, long id) {
         PlayerDto playerDto = Mapper.mapFromRequestToDto(createPlayerRequest);
         playerService.updatePlayerById(playerDto);
         return Mapper.mapFromDtoToGetResponse(playerDto);
     }
-    @Override
-    public List<PlayerDto> getAllPlayers() {
-        List<Player> players = playerService.getAllPlayers();
-        return players.stream()
-                .map(Mapper::mapToDto)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<PlayerDto> getAllPlayers() {
+//        List<Player> players = playerService.getAllPlayers();
+//        return players.stream()
+//                .map(Mapper::mapToDto)
+//                .collect(Collectors.toList());
+//    }
     @Override
     public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
-        return 1;
+        return playerService.getFilteredPlayersCount(getPlayerCountRequest);
+    }
+    @Override
+    public List<PlayerResponse> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
+        List<PlayerDto> playerDtos = playerService.getFilteredPlayers(getPlayersListRequest);
+        return playerDtos.stream()
+                .map(Mapper::mapFromDtoToGetResponse)
+                .collect(Collectors.toList());
     }
 }

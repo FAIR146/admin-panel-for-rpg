@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.controller.put.CreatePlayerRequest;
 import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.put.GetPlayersListRequest;
 import com.example.demo.controller.response.PlayerResponse;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Profession;
@@ -26,11 +27,11 @@ public interface PlayerController {
     ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id);
     @PostMapping("/players/{id}")
     PlayerResponse updatePlayerById (@Valid @RequestBody CreatePlayerRequest createPlayerRequest, @PathVariable long id);
-    @GetMapping("/rest/players/counts")
-    int getPlayersCount ();
-    @GetMapping("/rest/players")
-    List<PlayerDto> getAllPlayers();
+//    @GetMapping("/rest/players")
+//    List<PlayerDto> getAllPlayers();
     @GetMapping("/rest/players/count")
     int getFilteredPlayersCount(@RequestBody GetPlayerCountRequest getPlayerCountRequest);
+    @GetMapping("/rest/players")
+    List<PlayerResponse> getFilteredPlayers(@RequestBody GetPlayersListRequest getPlayersListRequest);
 
 }

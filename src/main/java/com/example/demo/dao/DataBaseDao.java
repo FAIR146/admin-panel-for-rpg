@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.controller.put.GetPlayerCountRequest;
+import com.example.demo.controller.put.GetPlayersListRequest;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
@@ -34,6 +35,7 @@ public class DataBaseDao implements PlayerDao {
         player.setUntilNextLevel(rs.getInt("untilnextlevel"));
         return player;
     };
+
 
     DataBaseDao (JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -91,13 +93,21 @@ public class DataBaseDao implements PlayerDao {
         return jdbcTemplate.query(sql, playerRowMapper);
     }
     @Override
-    public int getPlayersCount() {
-        String sql = "SELECT COUNT(*) FROM player";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+    public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
+        String sql = "SELECT COUNT(*) FROM player WHERE name like ? AND title = ? AND race = ? AND profession = ? AND " +
+                "? <= birthday AND birthday <= ? AND banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ?";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, "%" + getPlayerCountRequest.getName() + "%", getPlayerCountRequest.getTitle(), getPlayerCountRequest.getRace().name(),
+                getPlayerCountRequest.getProfession().name(), new java.sql.Date(getPlayerCountRequest.getAfter()), new java.sql.Date(getPlayerCountRequest.getBefore()), getPlayerCountRequest.getBanned(),
+                getPlayerCountRequest.getMinExperience(), getPlayerCountRequest.getMaxExperience(), getPlayerCountRequest.getMinLevel(), getPlayerCountRequest.getMaxLevel());
     }
     @Override
-    public int getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
-        return 1;
-    }
+    public List<Player> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
+        String sql = "SELECT FROM player WHERE name like ? AND title = ? AND race = ? AND profession = ? AND " +
+                      "banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ?";
 
+        return jdbcTemplate.query(sql, playerRowMapper,"%" + getPlayersListRequest.getName() + "%", getPlayersListRequest.getTitle(), getPlayersListRequest.getRace().name(),
+                getPlayersListRequest.getProfession().name(), getPlayersListRequest.getBanned(), getPlayersListRequest.getMinExperience(), getPlayersListRequest.getMaxExperience(), getPlayersListRequest.getMinLevel(),
+                getPlayersListRequest.getMaxLevel());
+    }
 }
