@@ -6,6 +6,7 @@ import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class DataBaseDao implements PlayerDao {
     private final JdbcTemplate jdbcTemplate;
@@ -85,7 +87,9 @@ public class DataBaseDao implements PlayerDao {
                 "untilnextlevel = ? " +
                 "WHERE id = ?";
 
+        log.info("Updating player with ID: " + playerDto.getId() + " Name: " + playerDto.getName());
         jdbcTemplate.update(sql, playerDto.getName(), playerDto.getTitle(), playerDto.getRace().name(), playerDto.getProfession().name(), playerDto.getBirthday(), playerDto.isBanned(), playerDto.getExperience(), playerDto.getLevel(), playerDto.getUntilNextLevel(), playerDto.getId());
+
     }
     @Override
     public List<Player> getAllPlayers() {
@@ -103,17 +107,55 @@ public class DataBaseDao implements PlayerDao {
     }
     @Override
     public List<Player> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
-        String sql = "SELECT FROM player WHERE name like ? AND title = ? AND race = ? AND profession = ? AND " +
-                "? <= birthday AND birthday <= ? AND banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ? AND ";
+        String sql = "SELECT FROM player WHERE ";
 
-        if (getPlayersListRequest.getTitle() != null) {
-            sql + "title = ? AND ";
+        if (getPlayersListRequest.getName() != null) {
+            String sqlName = "name like ? ";
+            sql += sqlName;
         }
-        if (getPlayersListRequest.getRace() != null) {
-            String sqlRace = "race = ? AND";
+        else if (getPlayersListRequest.getTitle() != null) {
+            String sqlTitle = " title = ? AND ";
+            sql+= sqlTitle;
         }
-        if (getPlayersListRequest.getProfession() != null) {
-            String sqlProfsesion
+        else if (getPlayersListRequest.getRace() != null) {
+            String sqlRace = " race = ? AND ";
+            sql+= sqlRace;
+        }
+        else if (getPlayersListRequest.getProfession() != null) {
+            String sqlProfession = " profession = ? AND ";
+            sql += sqlProfession;
+        }
+        else if (getPlayersListRequest.getAfter() != null) {
+            String sqlAfter = "? <= after AND";
+            sql += sqlAfter;
+        }
+        else if (getPlayersListRequest.getBefore() != null) {
+            String sqlBefore = " AND before <= ?";
+            sql += sqlBefore;
+        }
+        else if (getPlayersListRequest.getBanned() != null) {
+            String sqlBanned = " AND banned = ? ";
+            sql+= sqlBanned;
+        }
+        else if (getPlayersListRequest.getMinExperience() != null) {
+            String sqlMinExp = " ? <= experience AND";
+            sql += sqlMinExp;
+        }
+        else if (getPlayersListRequest.getMaxExperience() != null) {
+            String sqlMaxExp = " AND experience <= ? ";
+            sql += sqlMaxExp;
+        }
+        else if (getPlayersListRequest.getOrder() != null) {
+            String sqlOrder = " AND order = ? ";
+            sql += sqlOrder;
+        }
+        else if (getPlayersListRequest.getPageNumber() != null) {
+            String sqlPageNum = " AND pageNumber = ? ";
+            sql += sqlPageNum;
+        }
+        else if (getPlayersListRequest.getPageSize() != null) {
+            String sqlPageSize = " AND pageSize = ? ";
+            sql += sqlPageSize;
         }
 
 

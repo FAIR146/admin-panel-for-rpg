@@ -25,9 +25,10 @@ public interface PlayerController {
     void deletePlayerById (@PathVariable long id);
     @GetMapping("/rest/players/{id}")
     ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id);
-    @PostMapping("/players/{id}")
+    @PostMapping("rest/players/{id}")
     PlayerResponse updatePlayerById (@Valid @RequestBody CreatePlayerRequest createPlayerRequest, @PathVariable long id);
-//    @GetMapping("/rest/players")
+
+    //    @GetMapping("/rest/players")
 //    List<PlayerDto> getAllPlayers();
     @GetMapping("/rest/players/count")
     Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);

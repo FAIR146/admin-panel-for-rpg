@@ -5,6 +5,7 @@ import com.example.demo.controller.response.PlayerResponse;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 
 
@@ -67,7 +68,12 @@ public class Mapper {
         playerDto.setTitle(playerRequest.getTitle());
         playerDto.setRace(playerRequest.getRace());
         playerDto.setProfession(playerRequest.getProfession());
-        playerDto.setBirthday(LocalDate.ofEpochDay(playerRequest.getBirthday()));
+        try {
+            long birthdayInMillis = DateUtil.convertToMillis(playerRequest.getBirthday());
+            playerDto.setBirthday(new java.sql.Date(birthdayInMillis).toLocalDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         playerDto.setBanned(playerRequest.getBanned());
         playerDto.setExperience(playerRequest.getExperience());
 

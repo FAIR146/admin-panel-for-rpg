@@ -21,7 +21,7 @@ public class CreatePlayerRequest {
     @NotNull
     private Profession profession;
     @NotNull
-    private Long birthday;
+    private String birthday;
     @NotNull
     private Boolean banned = false;
     @NotNull

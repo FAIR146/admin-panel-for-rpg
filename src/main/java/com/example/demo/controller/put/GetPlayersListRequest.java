@@ -4,9 +4,12 @@ import com.example.demo.entity.Profession;
 import com.example.demo.entity.Race;
 import com.example.demo.filter.PlayerOrder;
 
+import javax.validation.constraints.NotNull;
+
 public class GetPlayersListRequest {
     private String name;
     private String title;
+    @NotNull
     private Race race;
     private Profession profession;
     private Long after;
