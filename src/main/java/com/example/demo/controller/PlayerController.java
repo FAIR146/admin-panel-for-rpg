@@ -31,7 +31,7 @@ public interface PlayerController {
     //    @GetMapping("/rest/players")
 //    List<PlayerDto> getAllPlayers();
     @GetMapping("/rest/players/count")
-    Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest);
+    Integer getFilteredPlayersCount (GetPlayerCountRequest getPlayerCountRequest);
     @GetMapping("/rest/players")
     List<PlayerResponse> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest);
 
