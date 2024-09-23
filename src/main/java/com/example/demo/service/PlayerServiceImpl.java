@@ -1,17 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.controller.put.GetPlayerCountRequest;
-import com.example.demo.controller.put.GetPlayersListRequest;
+import com.example.demo.controller.put.GetPlayersRequest;
 import com.example.demo.dao.PlayerDao;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
-import com.example.demo.entity.Profession;
-import com.example.demo.entity.Race;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,13 +65,14 @@ public class PlayerServiceImpl implements PlayerService {
         playerDto.setUntilNextLevel(untilNextLevel);
     }
     @Override
-    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
-        return playerDao.getFilteredPlayersCount(getPlayerCountRequest);
+    public Integer getFilteredPlayersCount(GetPlayersRequest getPlayersRequest) {
+
+        return playerDao.getFilteredPlayersCount(getPlayersRequest);
     }
 
     @Override
-    public List<PlayerDto> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
-        List<Player> players = playerDao.getFilteredPlayers(getPlayersListRequest);
+    public List<PlayerDto> getFilteredPlayers(GetPlayersRequest getPlayersRequest) {
+        List<Player> players = playerDao.getFilteredPlayers(getPlayersRequest);
         return players.stream()
                 .map(Mapper::mapToDto)
                 .collect(Collectors.toList());

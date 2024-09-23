@@ -68,12 +68,6 @@ public class Mapper {
         playerDto.setTitle(playerRequest.getTitle());
         playerDto.setRace(playerRequest.getRace());
         playerDto.setProfession(playerRequest.getProfession());
-        try {
-            long birthdayInMillis = DateUtil.convertToMillis(playerRequest.getBirthday());
-            playerDto.setBirthday(new java.sql.Date(birthdayInMillis).toLocalDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         playerDto.setBanned(playerRequest.getBanned());
         playerDto.setExperience(playerRequest.getExperience());
 

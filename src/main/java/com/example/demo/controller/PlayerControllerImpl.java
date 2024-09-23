@@ -1,13 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.put.CreatePlayerRequest;
-import com.example.demo.controller.put.GetPlayerCountRequest;
-import com.example.demo.controller.put.GetPlayersListRequest;
+import com.example.demo.controller.put.GetPlayersRequest;
 import com.example.demo.controller.response.PlayerResponse;
 import com.example.demo.dto.PlayerDto;
-import com.example.demo.entity.Player;
-import com.example.demo.entity.Profession;
-import com.example.demo.entity.Race;
 import com.example.demo.service.Mapper;
 import com.example.demo.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,12 +60,12 @@ public class PlayerControllerImpl implements PlayerController {
 //                .collect(Collectors.toList());
 //    }
     @Override
-    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
-        return playerService.getFilteredPlayersCount(getPlayerCountRequest);
+    public Integer getFilteredPlayersCount(GetPlayersRequest getPlayersRequest) {
+        return playerService.getFilteredPlayersCount(getPlayersRequest);
     }
     @Override
-    public List<PlayerResponse> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
-        List<PlayerDto> playerDtos = playerService.getFilteredPlayers(getPlayersListRequest);
+    public List<PlayerResponse> getFilteredPlayers(GetPlayersRequest getPlayersRequest) {
+        List<PlayerDto> playerDtos = playerService.getFilteredPlayers(getPlayersRequest);
         return playerDtos.stream()
                 .map(Mapper::mapFromDtoToGetResponse)
                 .collect(Collectors.toList());

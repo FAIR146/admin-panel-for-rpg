@@ -1,7 +1,6 @@
 package com.example.demo.dao;
 
-import com.example.demo.controller.put.GetPlayerCountRequest;
-import com.example.demo.controller.put.GetPlayersListRequest;
+import com.example.demo.controller.put.GetPlayersRequest;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.Profession;
@@ -13,7 +12,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class DataBaseDao implements PlayerDao {
         player.setTitle(rs.getString("title"));
         player.setRace(Race.valueOf(rs.getString("race")));
         player.setProfession(Profession.valueOf(rs.getString("profession")));
-        player.setBirthday(rs.getDate("birthday").toLocalDate());
+        player.setBirthday(rs.getLong("birthday"));
         player.setBanned(rs.getBoolean("banned"));
         player.setExperience(rs.getInt("experience"));
         player.setLevel(rs.getInt("level"));
@@ -51,7 +49,7 @@ public class DataBaseDao implements PlayerDao {
     @Override
     public Player createPlayer(Player player) {
         String sql = "INSERT INTO player (name, title, race, profession, birthday, banned, experience, level, untilnextlevel) VALUES (?, ?, ?, ?, ?, ?, ?,?,?) RETURNING id";
-        long playerId = jdbcTemplate.queryForObject(sql, new Object[]{player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(), java.sql.Date.valueOf(player.getBirthday()), player.isBanned(), player.getExperience(),player.getLevel(), player.getUntilNextLevel()}, Long.class);
+        long playerId = jdbcTemplate.queryForObject(sql, new Object[]{player.getName(), player.getTitle(), player.getRace().name(), player.getProfession().name(),player.getBirthday(), player.isBanned(), player.getExperience(),player.getLevel(), player.getUntilNextLevel()}, Long.class);
 
         String selectSql = "SELECT * FROM player WHERE id = ?";
         return jdbcTemplate.queryForObject(selectSql, new Object[]{playerId}, playerRowMapper);
@@ -89,155 +87,189 @@ public class DataBaseDao implements PlayerDao {
 
         log.info("Updating player with ID: " + playerDto.getId() + " Name: " + playerDto.getName());
         jdbcTemplate.update(sql, playerDto.getName(), playerDto.getTitle(), playerDto.getRace().name(), playerDto.getProfession().name(), playerDto.getBirthday(), playerDto.isBanned(), playerDto.getExperience(), playerDto.getLevel(), playerDto.getUntilNextLevel(), playerDto.getId());
-
     }
+
     @Override
     public List<Player> getAllPlayers() {
         String sql = "SELECT id, name, title, race, profession, birthday, banned, experience, level, untilnextlevel FROM player";
         return jdbcTemplate.query(sql, playerRowMapper);
     }
-//    @Override
-//    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
-//        String sql = "SELECT COUNT(*) FROM player WHERE name like ? AND title = ? AND race = ? AND profession = ? AND " +
-//                "? <= birthday AND birthday <= ? AND banned = ? AND ? <= experience AND experience <= ? AND ? <= level AND level <= ?";
-//
-//        return jdbcTemplate.queryForObject(sql, Integer.class, "%" + getPlayerCountRequest.getName() + "%", getPlayerCountRequest.getTitle(), getPlayerCountRequest.getRace().name(),
-//                getPlayerCountRequest.getProfession().name(), new java.sql.Date(getPlayerCountRequest.getAfter()), new java.sql.Date(getPlayerCountRequest.getBefore()), getPlayerCountRequest.getBanned(),
-//                getPlayerCountRequest.getMinExperience(), getPlayerCountRequest.getMaxExperience(), getPlayerCountRequest.getMinLevel(), getPlayerCountRequest.getMaxLevel());
-//    }
+        @Override
+        public Integer getFilteredPlayersCount(GetPlayersRequest getPlayersRequest) {
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM player ");
+            List<Object> params = new ArrayList<>();
+            boolean isFirstCondition = true;
+
+            if (getPlayersRequest.getName() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("name LIKE ? ");
+                params.add("%" + getPlayersRequest.getName() + "%");
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getTitle() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("title LIKE ? ");
+                params.add("%" + getPlayersRequest.getTitle() + "%");
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getRace() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("race = ? ");
+                params.add(getPlayersRequest.getRace().name());
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getProfession() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("profession = ? ");
+                params.add(getPlayersRequest.getProfession().name());
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getAfter() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("birthday >= ? ");
+                params.add(new java.sql.Timestamp(getPlayersRequest.getAfter()));
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getBefore() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("birthday <= ? ");
+                params.add(new java.sql.Timestamp(getPlayersRequest.getBefore()));
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getBanned() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("banned = ? ");
+                params.add(getPlayersRequest.getBanned());
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getMinExperience() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("experience >= ? ");
+                params.add(getPlayersRequest.getMinExperience());
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getMaxExperience() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("experience <= ? ");
+                params.add(getPlayersRequest.getMaxExperience());
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getMinLevel() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("level >= ? ");
+                params.add(getPlayersRequest.getMinLevel());
+                isFirstCondition = false;
+            }
+
+            if (getPlayersRequest.getMaxLevel() != null) {
+                sql.append(isFirstCondition ? "WHERE " : "AND ");
+                sql.append("level <= ? ");
+                params.add(getPlayersRequest.getMaxLevel());
+            }
+
+            return jdbcTemplate.queryForObject(sql.toString(), Integer.class, params.toArray());
+        }
+
+
     @Override
-    public Integer getFilteredPlayersCount(GetPlayerCountRequest getPlayerCountRequest) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM player WHERE 1=1 ");
+    public List<Player> getFilteredPlayers(GetPlayersRequest getPlayersRequest) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM player ");
         List<Object> params = new ArrayList<>();
+        boolean isFirstCondition = true;
 
-        if (getPlayerCountRequest.getName() != null) {
-            sql.append("AND name LIKE ? ");
-            params.add("%" + getPlayerCountRequest.getName() + "%");
+        if (getPlayersRequest.getName() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("name LIKE ? ");
+            params.add("%" + getPlayersRequest.getName() + "%");
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getTitle() != null) {
-            sql.append("AND title LIKE ? ");
-            params.add("%" + getPlayerCountRequest.getTitle() + "%");
+        if (getPlayersRequest.getTitle() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("title LIKE ? ");
+            params.add("%" + getPlayersRequest.getTitle() + "%");
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getRace() != null) {
-            sql.append("AND race = ? ");
-            params.add(getPlayerCountRequest.getRace().name());
+        if (getPlayersRequest.getRace() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("race = ? ");
+            params.add(getPlayersRequest.getRace().name());
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getProfession() != null) {
-            sql.append("AND profession = ? ");
-            params.add(getPlayerCountRequest.getProfession().name());
+        if (getPlayersRequest.getProfession() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("profession = ? ");
+            params.add(getPlayersRequest.getProfession().name());
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getAfter() != null) {
-            sql.append("AND birthday >= ? ");
-            params.add(new java.sql.Date(getPlayerCountRequest.getAfter()));
+        if (getPlayersRequest.getAfter() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("birthday >= ? ");
+            params.add(new java.sql.Date(getPlayersRequest.getAfter()));
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getBefore() != null) {
-            sql.append("AND birthday <= ? ");
-            params.add(new java.sql.Date(getPlayerCountRequest.getBefore()));
+        if (getPlayersRequest.getBefore() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("birthday <= ? ");
+            params.add(new java.sql.Date(getPlayersRequest.getBefore()));
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getBanned() != null) {
-            sql.append("AND banned = ? ");
-            params.add(getPlayerCountRequest.getBanned());
+        if (getPlayersRequest.getBanned() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("banned = ? ");
+            params.add(getPlayersRequest.getBanned());
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getMinExperience() != null) {
-            sql.append("AND experience >= ? ");
-            params.add(getPlayerCountRequest.getMinExperience());
+        if (getPlayersRequest.getMinExperience() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("experience >= ? ");
+            params.add(getPlayersRequest.getMinExperience());
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getMaxExperience() != null) {
-            sql.append("AND experience <= ? ");
-            params.add(getPlayerCountRequest.getMaxExperience());
+        if (getPlayersRequest.getMaxExperience() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("experience <= ? ");
+            params.add(getPlayersRequest.getMaxExperience());
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getMinLevel() != null) {
-            sql.append("AND level >= ? ");
-            params.add(getPlayerCountRequest.getMinLevel());
+        if (getPlayersRequest.getMinLevel() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("level >= ? ");
+            params.add(getPlayersRequest.getMinLevel());
+            isFirstCondition = false;
         }
 
-        if (getPlayerCountRequest.getMaxLevel() != null) {
-            sql.append("AND level <= ? ");
-            params.add(getPlayerCountRequest.getMaxLevel());
+        if (getPlayersRequest.getMaxLevel() != null) {
+            sql.append(isFirstCondition ? "WHERE " : "AND ");
+            sql.append("level <= ? ");
+            params.add(getPlayersRequest.getMaxLevel());
         }
 
-
-        return jdbcTemplate.queryForObject(sql.toString(), Integer.class);
-    }
-
-    @Override
-    public List<Player> getFilteredPlayers(GetPlayersListRequest getPlayersListRequest) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM player WHERE 1=1 ");
-        List<Object> params = new ArrayList<>();
-
-        if (getPlayersListRequest.getName() != null) {
-            sql.append("AND name LIKE ? ");
-            params.add("%" + getPlayersListRequest.getName() + "%");
+        if (getPlayersRequest.getOrder() != null) {
+            sql.append("ORDER BY ").append(getPlayersRequest.getOrder()).append(" ");
         }
 
-        if (getPlayersListRequest.getTitle() != null) {
-            sql.append("AND title LIKE ? ");
-            params.add("%" + getPlayersListRequest.getTitle() + "%");
-        }
-
-        if (getPlayersListRequest.getRace() != null) {
-            sql.append("AND race = ? ");
-            params.add(getPlayersListRequest.getRace().name());
-        }
-
-        if (getPlayersListRequest.getProfession() != null) {
-            sql.append("AND profession = ? ");
-            params.add(getPlayersListRequest.getProfession().name());
-        }
-
-        if (getPlayersListRequest.getAfter() != null) {
-            sql.append("AND birthday >= ? ");
-            params.add(new java.sql.Date(getPlayersListRequest.getAfter()));
-        }
-
-        if (getPlayersListRequest.getBefore() != null) {
-            sql.append("AND birthday <= ? ");
-            params.add(new java.sql.Date(getPlayersListRequest.getBefore()));
-        }
-
-        if (getPlayersListRequest.getBanned() != null) {
-            sql.append("AND banned = ? ");
-            params.add(getPlayersListRequest.getBanned());
-        }
-
-        if (getPlayersListRequest.getMinExperience() != null) {
-            sql.append("AND experience >= ? ");
-            params.add(getPlayersListRequest.getMinExperience());
-        }
-
-        if (getPlayersListRequest.getMaxExperience() != null) {
-            sql.append("AND experience <= ? ");
-            params.add(getPlayersListRequest.getMaxExperience());
-        }
-
-        if (getPlayersListRequest.getMinLevel() != null) {
-            sql.append("AND level >= ? ");
-            params.add(getPlayersListRequest.getMinLevel());
-        }
-
-        if (getPlayersListRequest.getMaxLevel() != null) {
-            sql.append("AND level <= ? ");
-            params.add(getPlayersListRequest.getMaxLevel());
-        }
-
-        if (getPlayersListRequest.getOrder() != null) {
-            sql.append("ORDER BY ").append(getPlayersListRequest.getOrder()).append(" ");
-        }
-
-
-        if (getPlayersListRequest.getPageNumber() != null && getPlayersListRequest.getPageSize() != null) {
-            int offset = getPlayersListRequest.getPageNumber() * getPlayersListRequest.getPageSize();
+        if (getPlayersRequest.getPageNumber() != null && getPlayersRequest.getPageSize() != null) {
+            int offset = getPlayersRequest.getPageNumber() * getPlayersRequest.getPageSize();
             sql.append("LIMIT ? OFFSET ? ");
-            params.add(getPlayersListRequest.getPageSize());
+            params.add(getPlayersRequest.getPageSize());
             params.add(offset);
         }
 
