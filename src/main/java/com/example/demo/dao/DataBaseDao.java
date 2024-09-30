@@ -107,15 +107,14 @@ public Player createPlayer(Player player) {
         String sql = "SELECT id, name, title, race, profession, birthday, banned, experience, level, untilnextlevel FROM player";
         return jdbcTemplate.query(sql, playerRowMapper);
     }
-        @Override
-        public Integer getFilteredPlayersCount(GetPlayersRequest getPlayersRequest) {
-            String sql = "SELECT COUNT(*) FROM player";
-            List<Object> values = new ArrayList<>();
-            filter(getPlayersRequest,sql,values);
+    @Override
+    public Integer getFilteredPlayersCount(GetPlayersRequest getPlayersRequest) {
+        String sql = "SELECT COUNT(*) FROM player";
+        List<Object> values = new ArrayList<>();
+        sql = filter(getPlayersRequest,sql,values);
 
-            return jdbcTemplate.queryForObject(sql, Integer.class, values.toArray());
+        return jdbcTemplate.queryForObject(sql, Integer.class, values.toArray());
         }
-
 
     @Override
     public List<Player> getFilteredPlayers(GetPlayersRequest getPlayersRequest) {
