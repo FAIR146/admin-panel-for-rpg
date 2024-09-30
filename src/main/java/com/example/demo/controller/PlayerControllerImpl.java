@@ -30,13 +30,9 @@ public class PlayerControllerImpl implements PlayerController {
     }
 
     @Override
-    public void deletePlayerById (long id) {
-        playerService.removePlayerById(id);
-    }
+    public ResponseEntity<PlayerResponse> deletePlayerById (long id) {
+        PlayerDto playerDto = playerService.removePlayerById(id);
 
-    @Override
-    public ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id) {
-        PlayerDto playerDto = playerService.getPlayerById(id);
         if (playerDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -46,24 +42,37 @@ public class PlayerControllerImpl implements PlayerController {
     }
 
     @Override
-    public PlayerResponse updatePlayerById(CreatePlayerRequest createPlayerRequest, long id) {
-        PlayerDto playerDto = Mapper.mapFromRequestToDto(createPlayerRequest);
+    public ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id) {
+        PlayerDto playerDto = playerService.getPlayerById(id);
+
+        if (playerDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        PlayerResponse PlayerResponse = Mapper.mapFromDtoToGetResponse(playerDto);
+        return ResponseEntity.ok(PlayerResponse);
+    }
+
+    @Override
+    public ResponseEntity<PlayerResponse> updatePlayerById(CreatePlayerRequest createPlayerRequest, long id) {
+        PlayerDto playerDto = playerService.getPlayerById(id);
+        if (playerDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        playerDto = Mapper.mapFromRequestToDto(createPlayerRequest);
         playerDto.setId(id);
         playerService.updatePlayerById(playerDto);
 
-        return Mapper.mapFromDtoToGetResponse(playerDto);
+        PlayerResponse playerResponse = Mapper.mapFromDtoToGetResponse(playerDto);
+        return ResponseEntity.ok(playerResponse);
     }
-//    @Override
-//    public List<PlayerDto> getAllPlayers() {
-//        List<Player> players = playerService.getAllPlayers();
-//        return players.stream()
-//                .map(Mapper::mapToDto)
-//                .collect(Collectors.toList());
-//    }
+
     @Override
     public Integer getFilteredPlayersCount(GetPlayersRequest getPlayersRequest) {
         return playerService.getFilteredPlayersCount(getPlayersRequest);
     }
+
     @Override
     public List<PlayerResponse> getFilteredPlayers(GetPlayersRequest getPlayersRequest) {
         List<PlayerDto> playerDtos = playerService.getFilteredPlayers(getPlayersRequest);

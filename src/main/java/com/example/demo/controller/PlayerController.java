@@ -17,11 +17,11 @@ public interface PlayerController {
     @PostMapping("/rest/players")
     PlayerResponse createPlayer (@Valid @RequestBody CreatePlayerRequest createPlayerRequest);
     @DeleteMapping("/rest/players/{id}")
-    void deletePlayerById (@PathVariable long id);
+    ResponseEntity<PlayerResponse> deletePlayerById (@PathVariable long id);
     @GetMapping("/rest/players/{id}")
     ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id);
     @PostMapping("/rest/players/{id}")
-    PlayerResponse updatePlayerById (@Valid @RequestBody CreatePlayerRequest createPlayerRequest, @PathVariable long id);
+    ResponseEntity<PlayerResponse> updatePlayerById (@Valid @RequestBody CreatePlayerRequest createPlayerRequest, @PathVariable long id);
     @GetMapping("/rest/players/count")
     Integer getFilteredPlayersCount (GetPlayersRequest getPlayersRequest);
     @GetMapping("/rest/players")

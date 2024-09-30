@@ -9,7 +9,7 @@ import java.util.List;
 public interface PlayerDao {
     Player createPlayer(Player player);
 
-    void removePlayerById(long id);
+    boolean removePlayerById(long id);
 
     Player getPlayerById(long id);
 

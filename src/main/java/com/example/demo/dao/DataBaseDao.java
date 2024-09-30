@@ -66,9 +66,11 @@ public Player createPlayer(Player player) {
     return jdbcTemplate.queryForObject(selectSql, new Object[]{playerId}, playerRowMapper);
 }
     @Override
-    public void removePlayerById (long id) {
+    public boolean removePlayerById (long id) {
         String sql = "DELETE FROM player WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        int updatedRows = jdbcTemplate.update(sql, id);
+
+        return updatedRows != 0;
     }
     @Override
     public Player getPlayerById (long id) {
@@ -138,7 +140,7 @@ public Player createPlayer(Player player) {
         return jdbcTemplate.query(sql.toString(), playerRowMapper, values.toArray());
     }
 
-    public String filter(GetPlayersRequest getPlayersRequest, String sql, List<Object> values) {
+    public String filter(GetPlayersRequest getPlayersRequest, String rows, List<Object> values) {
         List<String> clauses = new ArrayList<>();
 
         if (getPlayersRequest.getName() != null) {
@@ -197,15 +199,15 @@ public Player createPlayer(Player player) {
         }
 
         if (!clauses.isEmpty()) {
-            sql += " WHERE " + String.join(" AND ", clauses);
+            rows += " WHERE " + String.join(" AND ", clauses);
         }
 
 //        if (!clauses.isEmpty()) {
 //            String joinedClauses = String.join(" AND ", clauses);
-//            sql += " WHERE " + joinedClauses;
+//            rows += " WHERE " + joinedClauses;
 //        }
 
-        return sql;
+        return rows;
     }
 }
 

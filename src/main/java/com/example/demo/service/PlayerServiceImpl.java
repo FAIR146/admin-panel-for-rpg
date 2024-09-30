@@ -30,6 +30,10 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerDto removePlayerById(long id) {
         Player player = playerDao.getPlayerById(id);
+        if (player == null) {
+            return null;
+        }
+
         PlayerDto playerDto = Mapper.mapToDto(player);
         playerDao.removePlayerById(id);
         return playerDto;
@@ -38,6 +42,9 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerDto getPlayerById(long id) {
         Player player = playerDao.getPlayerById(id);
+        if (player == null) {
+            return null;
+        }
         return Mapper.mapToDto(player);
     }
 
