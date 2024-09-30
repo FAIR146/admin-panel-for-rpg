@@ -48,6 +48,7 @@ public class PlayerControllerImpl implements PlayerController {
     @Override
     public PlayerResponse updatePlayerById(CreatePlayerRequest createPlayerRequest, long id) {
         PlayerDto playerDto = Mapper.mapFromRequestToDto(createPlayerRequest);
+        playerDto.setId(id);
         playerService.updatePlayerById(playerDto);
 
         return Mapper.mapFromDtoToGetResponse(playerDto);

@@ -22,12 +22,9 @@ public interface PlayerController {
     ResponseEntity<PlayerResponse> getPlayerById (@PathVariable long id);
     @PostMapping("/rest/players/{id}")
     PlayerResponse updatePlayerById (@Valid @RequestBody CreatePlayerRequest createPlayerRequest, @PathVariable long id);
-
-    //    @GetMapping("/rest/players")
-//    List<PlayerDto> getAllPlayers();
     @GetMapping("/rest/players/count")
-    Integer getFilteredPlayersCount (@Valid @RequestBody GetPlayersRequest getPlayersRequest);
+    Integer getFilteredPlayersCount (GetPlayersRequest getPlayersRequest);
     @GetMapping("/rest/players")
-    List<PlayerResponse> getFilteredPlayers(@Valid @RequestBody GetPlayersRequest getPlayersRequest);
+    List<PlayerResponse> getFilteredPlayers(GetPlayersRequest getPlayersRequest);
 
 }

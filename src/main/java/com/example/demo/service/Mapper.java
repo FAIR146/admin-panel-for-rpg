@@ -5,6 +5,7 @@ import com.example.demo.controller.response.PlayerResponse;
 import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Player;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.time.LocalDate;
 
@@ -65,6 +66,7 @@ public class Mapper {
 
         playerDto.setId(playerRequest.getId());
         playerDto.setName(playerRequest.getName());
+        playerDto.setBirthday(playerRequest.getBirthday());
         playerDto.setTitle(playerRequest.getTitle());
         playerDto.setRace(playerRequest.getRace());
         playerDto.setProfession(playerRequest.getProfession());
