@@ -2,10 +2,9 @@ package com.example.demo.entity;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @Data
 public class Player {
@@ -19,15 +18,19 @@ public class Player {
     private Race race;
     @NotNull
     private Profession profession;
-    @NotNull @Size
+    @NotNull
+    @Min(0)
     private Long birthday;
     @NotNull
     private boolean banned;
     @NotBlank
+    @Min(0)
     private int experience;
-    @NotNull @Size
+    @NotNull
+    @Min(0)
     private int level;
-    @NotNull @Size
+    @NotNull
+    @Min(0)
     private int untilNextLevel;
 
 }
